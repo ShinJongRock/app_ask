@@ -39,7 +39,7 @@ const App = () => {
             <Tab.Screen name="메인" component={MainPage} />
             <Tab.Screen name="휴가" component={CPage} />
             <Tab.Screen name="기타" component={DPage} />
-            <Tab.Screen name="Login" component={Login} />
+            {/* <Tab.Screen name="Login" component={Login} /> */}
       
         </Tab.Navigator>
     </NavigationContainer>
