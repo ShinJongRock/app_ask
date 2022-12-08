@@ -1,25 +1,23 @@
+
+import React, { useEffect, useState } from 'react';
 import {
     StyleSheet,
     Text,
     View,
-    SafeAreaView,
-    TextInput,
+    Button,
     Alert,
     Image,
+    Style,
     TouchableOpacity,
     Modal,
-    Button
+    Pressable,
 } from 'react-native';
-
-const CPage = () => {
+const C_2 = () => {
     return (
         <View>
-            <Text>
-                asd
-            </Text>
-            
+                <Text> 급여 현황</Text>
         </View>
     );
 };
 
-export default CPage;
+export default C_2;
