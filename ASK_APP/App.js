@@ -11,19 +11,24 @@ import CPage from './page/CPage';
 import DPage from './page/DPage';
 import Login from './page/Login';
 import ask from './img/ask.png';
+import Repw from './page/Repw';
 
 import A_1 from './stackPage/A_1';
 import A_2 from './stackPage/A_2';
 import B_1 from './stackPage/B_1';
 import B_2 from './stackPage/B_2';
 import C_1 from './stackPage/C_1';
-import C_2 from './stackPage/C_2'
+import C_2 from './stackPage/C_2';
+
+
+import Mpage from '../ASK_APP/page/Mpage'
+
 const Tab = createBottomTabNavigator();
 const Astack = createNativeStackNavigator();
 const mainstack = createNativeStackNavigator();
 
 
-const StackScreen = () => {
+const StackScreen = (navigation, route ) => {
     return (
        
             
@@ -36,6 +41,9 @@ const StackScreen = () => {
                 <Astack.Screen name='B_2'  options={{title:'휴가조회'}}component={B_2} />
                 <Astack.Screen name='C_1'  options={{title:'출근현황'}} component={C_1} />
                 <Astack.Screen name='C_2'  options={{title:'급여현황'}}component={C_2} />
+                <Astack.Screen name='Loginpage'  options={{title:'로그인'}}component={Login} />
+                <Astack.Screen name='Repw'  options={{title:'로그인'}}component={Repw} />
+                {/* <Astack.Screen name='Repw'  options={{title:'로그인'}}component={Repw} /> */}
 
      
               
@@ -45,6 +53,21 @@ const StackScreen = () => {
     );
 };
 
+// const tap = (navigation, route ) => {
+//     <Tab.Navigator initialRouteName='메인'>
+
+//         <Tab.Screen name='출퇴근' component={APage} options={{ tabBarIcon: props => TabIcon({ ...props, name: 'briefcase' }) }} />
+
+//         <Tab.Screen name="경비" component={BPage} options={{ tabBarIcon: props => TabIcon({ ...props, name: 'calculator' }) }} />
+//         <Tab.Screen name="메인" component={StackScreen} options={{ headerShown: false, tabBarIcon: props => TabIcon({ ...props, name: 'home' }) }} />
+//         {/* <Tab.Screen name="ㅁ" style={styles.m} options={{headerShown:false  ,tabBarIcon: props => TabIcon({...props, name:'home'}) }}   component={MainPage} /> */}
+//         <Tab.Screen name="휴가" component={CPage} options={{ tabBarIcon: props => TabIcon({ ...props, name: 'car' }) }} />
+//         <Tab.Screen name="급여" component={DPage} options={{ tabBarIcon: props => TabIcon({ ...props, name: 'menu' }) }} />
+//         {/* <Tab.Screen name="Login" component={Login} /> */}
+
+
+//     </Tab.Navigator>
+// }
 
 
 
@@ -62,19 +85,27 @@ const TabIcon = ({ name, size, color }) => {
 
 const App = () => {
   return (
+
     <NavigationContainer>
-        <Tab.Navigator initialRouteName='메인'>
-            
-            <Tab.Screen name='출퇴근' component={APage} options={{  tabBarIcon: props => TabIcon({...props, name:'briefcase'})}}/>
-           
-            <Tab.Screen name="경비" component={BPage}  options={{tabBarIcon: props => TabIcon({...props, name:'calculator'})}}/>
-            <Tab.Screen name="메인"   component={StackScreen} options={{headerShown:false  ,tabBarIcon: props => TabIcon({...props, name:'home'}) }}   />
-            {/* <Tab.Screen name="ㅁ" style={styles.m} options={{headerShown:false  ,tabBarIcon: props => TabIcon({...props, name:'home'}) }}   component={MainPage} /> */}
-            <Tab.Screen name="휴가" component={CPage} options={{tabBarIcon: props => TabIcon({...props, name:'car'})}}/>
-            <Tab.Screen name="기타" component={DPage}  options={{tabBarIcon: props => TabIcon({...props, name:'menu'})}}/>
-            {/* <Tab.Screen name="Login" component={Login} /> */}
       
-        </Tab.Navigator>
+      <Astack.Navigator initialRouteName='Loginpage'> 
+                {/* <Astack.Screen name="APage"   options={{title:'경비관리'}}  component={APage}/> */}
+                <Astack.Screen name='main'  options={{title:'메인' ,headerShown:false }} component={Mpage} />
+                <Astack.Screen name='A_1'  options={{title:'경비등록'}} component={A_1} />
+                <Astack.Screen name='A_2'  options={{title:'경비목록'}}component={A_2} />
+                <Astack.Screen name='B_1'  options={{title:'휴가신청'}} component={B_1} />
+                <Astack.Screen name='B_2'  options={{title:'휴가조회'}}component={B_2} />
+                <Astack.Screen name='C_1'  options={{title:'출근현황'}} component={C_1} />
+                <Astack.Screen name='C_2'  options={{title:'급여현황'}}component={C_2} />
+                <Astack.Screen name='Loginpage'  options={{title:'로그인' ,headerShown:false }}component={Login} />
+                <Astack.Screen name='Repw'  options={{title:'로그인',headerShown:false }}component={Repw} />
+                {/* <Astack.Screen name='Repw'  options={{title:'로그인'}}component={Repw} /> */}
+
+     
+              
+               
+            </Astack.Navigator>
+
     </NavigationContainer>
   );
 };
