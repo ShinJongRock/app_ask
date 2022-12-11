@@ -12,6 +12,7 @@ import { StyleSheet,
             } from 'react-native';
             import { NavigationContainer } from '@react-navigation/native';
             import { createNativeStackNavigator } from '@react-navigation/native-stack';
+            import ask from '../img/ask.png';
 const APage = ({navigation, route}) => {
 
 
@@ -25,17 +26,12 @@ const APage = ({navigation, route}) => {
     }
     return (
         <View>
-            {/* <View><Text>??????</Text></View> */}
-            <View>
-            {/* <TouchableOpacity
-                title="Go to profile"
-                // onPress={goApage}
-                onPress={(screen) => goApage('A_1')}
-            >
-              <View><Text>카메라</Text></View>
-            </TouchableOpacity> */}
-                <Text>asd</Text>
+               <View style={styles.imgmain} >
+                <Image resizeMode="contain" style={styles.ask} source={ask} />
             </View>
+      
+                <Text>a페이지</Text>
+    
           
             
         </View>
@@ -43,3 +39,47 @@ const APage = ({navigation, route}) => {
 };
 
 export default APage;
+const styles = StyleSheet.create({
+    cameraContainer: {
+      backgroundColor:'white'
+      
+    },
+    main:{
+        height:'83%',
+        margin:10,
+        borderWidth: 1,
+        borderRadius: 13,
+    },
+    btu1:{
+       top:10,
+       margin:10,
+        height:'45%',
+        borderWidth: 1,
+        flexDirection: 'row',
+        justifyContent:'center',
+        alignItems:'center',
+        borderRadius: 13,
+    },
+    Image3:{
+        width: 150,
+        height:100,
+      },
+      Image4:{
+        width: 120,
+        height:80,
+      },
+      ask:{
+        top:20,
+        width:150, 
+         height:90,
+     
+
+      },
+      imgmain:{
+        justifyContent:'center',
+        alignItems:'center',
+      },
+    
+
+
+});

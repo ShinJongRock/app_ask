@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from "axios";
 import search from '../img/search.png';
 import {
     StyleSheet,
     Text,
     View,
-    SafeAreaView,
     TextInput,
     Alert,
     Image,
@@ -22,19 +21,29 @@ const B_1 = () => {
     const [vactName, setvactName] = useState("");
     const [vactDetail, setvactDetail] = useState("");
 
-    const [vactCategory, setvactCategory] = useState();
+    const [vactCategory, setvactCategory] = useState("");
     // Modal을 표시하거나 숨기기 위한 변수
     const [visibleMoal, setVisibleModal] = useState(false);
-
+   
 
     function vact() {
+        let check = /^[0-9]+$/; 
         if (vactStartDate.trim() === "") {
             Alert.alert("시작날짜를 입력해주세요");
-        } else if (vactEndDate.trim() === "") {
+        }else if(!check.test(vactStartDate)){
+            Alert.alert("숫자만 입력해주세요!");
+        } 
+        else if(!check.test(vactEndDate)){
+            Alert.alert("숫자만 입력해주세요!");
+        } 
+        else if (vactEndDate.trim() === "") {
             Alert.alert("종료날짜를 입력해주세요");
         } else if (vactPeriod.trim() === "") {
             Alert.alert("휴가기간을 입력해주세요")
-        } else if (vactName.trim() === "") {
+        }else if(!check.test(vactPeriod)){
+            Alert.alert("숫자만 입력해주세요!");
+        }  
+        else if (vactName.trim() === "") {
             Alert.alert("휴가항목을 선택해주세요")
         }
         else {
@@ -67,15 +76,20 @@ const B_1 = () => {
     }
 
     function getVactName() {
-        axios.post("http://192.168.2.91:5000/create_VactDispose",
+        console.log("getVact");
+        axios.post("http://192.168.2.91:5000/read_Vactcategory",
             { compCode: "admin01" }
         ).then(function (resp) {
             console.log(resp.data);
-            setvactCategory = resp.data
+            setvactCategory(resp.data)
         }).catch(function (err) {
             console.log(`Error Message: ${err}`);
         })
     }
+
+    useEffect(() => {
+        getVactName();
+    }, [])
 
     return (
         <View style={styles.container}>
@@ -104,8 +118,10 @@ const B_1 = () => {
 
                 <View style={styles.date1}>
                     <Text style={styles.dateText1}>휴가항목</Text>
-                    <TextInput style={styles.input1} value={vactName}
-                        onChangeText={(vactName) => setvactName(vactName)}></TextInput>
+                    <TextInput style={styles.input1} value={vactName} 
+                        onChangeText={(vactName) => setvactName(vactName)}
+                        >
+                        </TextInput>
                     <Modal animationType="slide"
                         transparent={true}
                         visible={visibleMoal}>
@@ -114,19 +130,41 @@ const B_1 = () => {
                             flexDirection: 'row',
                             justifyContent: 'center',
                             alignItems: 'center',
-                            width: '100%',
+                            borderRadius: 5
+                        
                         }}>
                             <View style={{
-                                flex: 0.5,
-                                borderRadius: 5,
+                                alignItems: 'center',
+                                flex: 0.7,
+                                borderRadius: 20,
                                 borderColor: '#cccccc',
                                 borderWidth: 1,
-                                backgroundColor: '#ffffff',
+                                backgroundColor: 'white',
                                 padding: 5,
+                                shadowColor: "#000",
+                                shadowOffset: {
+                                    width: 0,
+                                    height: 2
+                                },
+                                shadowOpacity: 0.25,
+                                shadowRadius: 4,
+                                elevation: 5
+                             
                             }}>
-                                <Text style={{ fontSize: 20 }}>휴가항목 선택</Text>
-                                {/* Modal 다이얼로그 숨기기 */}
-                                <Button title='닫기' onPress={() => setVisibleModal(false)} />
+                                <View style={styles.modalline}>
+                                    <Text style={{ fontSize: 22 , marginTop :22 , marginBottom :15, fontWeight: "bold", color:"white"}}>휴가항목 선택</Text>
+                                </View>
+                                <View style={styles.modalline2}>
+                                {
+                                vactCategory && vactCategory.map((el) =>
+                                    <Text style={styles.modalText} onPress={() => {setVisibleModal(false);setvactName(el.vactName)}}>{el.vactName}</Text>
+                                )}
+                                </View>
+                                <View style={styles.btn}>
+                                <TouchableOpacity onPress={() => setVisibleModal(false)} style={styles.modalText1}>
+                                    <Text style={{color:"white"}}>닫기</Text>
+                                </TouchableOpacity>
+                                </View>
                             </View>
                         </View>
                     </Modal>
@@ -161,18 +199,15 @@ const styles = StyleSheet.create({
         flex: 1, backgroundColor: "white",
     },
     title: {
-        flex: 1, backgroundColor: "white",
+        flex: 1, backgroundColor: "#005b9e",
         justifyContent: "center",
         alignItems: "left",
-        borderBottomWidth: 3,
-        borderColor: "gray",
-
     },
     titlename: {
-        fontSize: 20,
+        color :"white",
+        fontSize: 25,
         fontWeight: "500",
         marginLeft: 20,
-        marginTop: 30,
     },
     content: {
         flex: 7, backgroundColor: "white",
@@ -259,7 +294,7 @@ const styles = StyleSheet.create({
     buttonStyle: {
         justifyContent: "center",
         alignItems: 'center',
-        backgroundColor: "#2C9EF5",
+        backgroundColor: "#005b9e",
         width: 150,
         height: 50,
         margin: 20,
@@ -277,8 +312,52 @@ const styles = StyleSheet.create({
     imgStyle: {
         width: 40,
         height: 40,
+    },
+    modalText: {
+        top:5,
+        fontSize: 20,
+        margin: 10
+    },
+    modalText1: {
+        // marginBottom : 22,
+        fontSize: 20,
+        // marginTop: 20,
+        color : "white",
+        borderRadius: 10,
+        padding: 10,
+        margin: 4,
+        elevation: 2,
+        borderWidth: 1,
+        backgroundColor : "#005b9e",
+        borderColor: "#B3B3B3",
+        width : 70,
+        height : 40,
+        alignItems:"center",
+        justifyContent:"center"
+
+    },modalline:{
+        height:60,
+        width:"100%",
+        borderRadius: 10,
+        justifyContent:"center",
+        alignItems:'center',
+        backgroundColor:"#005b9e",
+        
+        // fontWeight : "500"
+    },
+    modalline2:{
+        backgroundColor:'white',
+
+    },
+    btn:{
+        margin:15,
+        
+        width:'100%',
+        height:30,
+        alignItems:"center",
+        borderTopWidth:1
     }
 
 });
 
-export default B_1;
+export default B_1; 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet,
              Text,
              View,
@@ -49,6 +49,12 @@ export default function MainPage({navigation, route}) {
 //     );
 // };
 
+
+
+  const [ location , setLocation] = useState("");  // 위도 경도 저장 useState
+
+
+
         //링크 이동
         const goApage = (screen) => {
           navigation.navigate(screen)
@@ -62,10 +68,34 @@ export default function MainPage({navigation, route}) {
               navigation.navigate(screen)
           }
   
+          //출근 버튼 눌렀을때 axios 보내는 함수
+          const input = () =>{
 
+          }
+          
+          //퇴근 버튼 눌렀을때 axios 보내는 함수
+          const outPut = () =>{
 
+          }
 
-
+          const getLocation = ()=>{
+            (async () => {
+          
+              let { status } = await Location.requestForegroundPermissionsAsync();
+           
+            
+              if (status !== 'granted') {
+                setErrorMsg('Permission to access location was denied');
+               
+                return;
+              }
+            //   console.log(status.latitude);
+              let loc = await Location.getCurrentPositionAsync({});
+              setLocation(loc);
+    
+            //   const {coords: {latitude,longitude} } =await Location.getCurrentPositionAsync();
+            })();
+          }
 
     return (
       // <NavigationContainer>
@@ -102,7 +132,7 @@ export default function MainPage({navigation, route}) {
               <View style={styles.toptext}><Text>출퇴근</Text></View>
               
             <View style={styles.two_1}>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={ input}>
                <View>
                <Image resizeMode="contain" style={styles.Image} source={inOut}/>
                </View>
@@ -111,7 +141,7 @@ export default function MainPage({navigation, route}) {
               
               </View>
 
-              <View style={styles.two_2}>
+              <View style={styles.two_2} onPress={ outPut}>
               <TouchableOpacity>
               <Image resizeMode="contain" style={styles.Image2} source={inOut2}/>
                 <Text style={styles.text2}>퇴근</Text>
