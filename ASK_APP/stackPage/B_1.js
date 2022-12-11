@@ -10,10 +10,12 @@ import {
     Image,
     TouchableOpacity,
     Modal,
-    Button
+    Button,
+    ScrollView
 } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const B_1 = () => {
+const CPage = ({navigation}) => {
 
     const [vactStartDate, setvactStartDate] = useState("");
     const [vactEndDate, setvactEndDate] = useState("");
@@ -26,7 +28,8 @@ const B_1 = () => {
     const [visibleMoal, setVisibleModal] = useState(false);
    
 
-    function vact() {
+     const vact= async () => {
+        console.log("체크:          ",vact)
         let check = /^[0-9]+$/; 
         if (vactStartDate.trim() === "") {
             Alert.alert("시작날짜를 입력해주세요");
@@ -47,7 +50,12 @@ const B_1 = () => {
             Alert.alert("휴가항목을 선택해주세요")
         }
         else {
-
+        const depName = await AsyncStorage.getItem('mb_depName')
+        const compCode = await AsyncStorage.getItem('compCode')
+        const empNum= await AsyncStorage.getItem('mb_code')
+        const empName= await AsyncStorage.getItem('mb_name')
+     
+            console.log(depName);
             axios.post("http://192.168.2.91:5000/create_VactDispose",
                 {
                     vactStartDate: vactStartDate,
@@ -55,14 +63,13 @@ const B_1 = () => {
                     vactPeriod: vactPeriod,
                     vactName: vactName,
                     vactDetail: vactDetail,
-                    compCode: "admin01",
-                    empName: "최범근",
-                    depName: "개발부",
-                    empNum: "008"
+                    compCode: compCode,
+                    empName: empName,
+                    depName: depName,
+                    empNum: empNum
                 }
             ).then(function (resp) {
                 console.log(resp.data);
-
                 if (resp.data !== null && resp.data != "") {
                     Alert.alert("휴가신청이 완료되었습니다")
 
@@ -75,10 +82,11 @@ const B_1 = () => {
         }
     }
 
-    function getVactName() {
-        console.log("getVact");
+   async function getVactName() {
+        const compCode = await AsyncStorage.getItem("compCode");
+        console.log("compCode출력" , compCode);
         axios.post("http://192.168.2.91:5000/read_Vactcategory",
-            { compCode: "admin01" }
+            { compCode:compCode }
         ).then(function (resp) {
             console.log(resp.data);
             setvactCategory(resp.data)
@@ -97,7 +105,7 @@ const B_1 = () => {
                 <Text style={styles.titlename}>  휴가신청</Text>
             </View>
             <View style={styles.content}>
-
+            <ScrollView>
                 <View style={styles.date}>
                     <Text style={styles.dateText}>날짜선택</Text>
                     <TextInput style={styles.input} placeholder='날짜입력' value={vactStartDate}
@@ -152,7 +160,7 @@ const B_1 = () => {
                              
                             }}>
                                 <View style={styles.modalline}>
-                                    <Text style={{ fontSize: 22 , marginTop :22 , marginBottom :15, fontWeight: "bold", color:"white"}}>휴가항목 선택</Text>
+                                    <Text style={{ fontSize: 22  , fontWeight: "bold", color:"white"}}>휴가항목 선택</Text>
                                 </View>
                                 <View style={styles.modalline2}>
                                 {
@@ -178,6 +186,7 @@ const B_1 = () => {
                     <TextInput style={styles.inputBox} value={vactDetail}
                         onChangeText={(vactDetail) => setvactDetail(vactDetail)}></TextInput>
                 </View>
+                </ScrollView>
             </View>
 
             <View style={styles.button}>
@@ -185,11 +194,13 @@ const B_1 = () => {
                     <TouchableOpacity style={styles.buttonStyle} >
                         <Text style={{ color: "white" }} onPress={() => vact()}>신청</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.buttonStyle2}>
+                    <TouchableOpacity style={styles.buttonStyle2}  onPress={() => navigation.pop()}>
                         <Text style={{ color: "white" }}>취소</Text>
                     </TouchableOpacity>
                 </View>
+                
             </View>
+            
         </View>
     );
 };
@@ -201,7 +212,7 @@ const styles = StyleSheet.create({
     title: {
         flex: 1, backgroundColor: "#005b9e",
         justifyContent: "center",
-        alignItems: "left",
+        // alignItems: "left",
     },
     titlename: {
         color :"white",
@@ -210,7 +221,9 @@ const styles = StyleSheet.create({
         marginLeft: 20,
     },
     content: {
-        flex: 7, backgroundColor: "white",
+        flex: 10,
+        height:'auto',
+        // backgroundColor: "red",
         marginTop: 40,
     },
     button: {
@@ -226,7 +239,7 @@ const styles = StyleSheet.create({
         width: "50%",
     },
     input1: {
-        marginBottom: 10,
+        marginBottom: 1,
         backgroundColor: "white",
         marginLeft: 30,
         borderBottomWidth: 1,
@@ -239,24 +252,24 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: "black",
         width: "50%",
-        height: "600%",
+        height: 200
 
     },
     date: {
         backgroundColor: "white",
-        justifyContent: "left",
+        // justifyContent: "left",
         flexDirection: "row",
         marginTop: 20
     },
     date1: {
         backgroundColor: "white",
-        justifyContent: "left",
+        // justifyContent: "left",
         flexDirection: "row",
         marginTop: 30
     },
     dateBox: {
         backgroundColor: "white",
-        justifyContent: "left",
+        // justifyContent: "left",
         flexDirection: "row",
         marginTop: 70,
     },
@@ -269,13 +282,13 @@ const styles = StyleSheet.create({
     dateText: {
         backgroundColor: "white",
         fontSize: 20,
-        alignItems: "left",
+        // alignItems: "left",
         marginLeft: 30,
     },
     dateText1: {
         backgroundColor: "white",
         fontSize: 20,
-        alignItems: "left",
+        // alignItems: "left",
         marginLeft: 30,
         marginTop: 10,
     },
@@ -312,6 +325,8 @@ const styles = StyleSheet.create({
     imgStyle: {
         width: 40,
         height: 40,
+        right:35,
+    
     },
     modalText: {
         top:5,
@@ -360,4 +375,4 @@ const styles = StyleSheet.create({
 
 });
 
-export default B_1; 
+export default CPage; 

@@ -9,7 +9,9 @@ import { StyleSheet, Text, View,
          KeyboardAvoidingView,
          TouchableOpacity,
          TouchableHighlight,
-         sessionStorage
+         sessionStorage,
+         TouchableWithoutFeedback,
+         Keyboard
         
         } from 'react-native';
 import ask from '../img/ask.png';
@@ -73,12 +75,15 @@ const  Login= ({navigation}) => {
 
         //   Alert.alert(id + "님 반갑습니다.")
         if(res.data != null){
-            AsyncStorage.setItem('mb_id', res.data.mb_id);
-            AsyncStorage.setItem('mb_pw', res.data.mb_pw);
-            AsyncStorage.setItem('mb_name', res.data.mb_name);
-            AsyncStorage.setItem('compCode', res.data.compCode);
-            AsyncStorage.setItem('mb_code', res.data.mb_code);
-            AsyncStorage.setItem('firstCheck', res.data.firstCheck);
+          AsyncStorage.setItem('mb_id', res.data.mb_id);
+          AsyncStorage.setItem('mb_pw', res.data.mb_pw);
+          AsyncStorage.setItem('mb_name', res.data.mb_name);
+          AsyncStorage.setItem('compCode', res.data.compCode);
+          AsyncStorage.setItem('mb_code', res.data.mb_code);
+          AsyncStorage.setItem('firstCheck', res.data.firstCheck);
+          AsyncStorage.setItem('mb_depName', res.data.mb_depName);
+          AsyncStorage.setItem('mb_depCode', res.data.mb_depCode);
+          AsyncStorage.setItem('mb_rank', res.data.mb_rank)
 
           console.log(res.data.mb_id)
           console.log(res.data.firstCheck)
@@ -117,6 +122,7 @@ const  Login= ({navigation}) => {
 
 
   return (
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
     <View style={styles.container}>
     
       
@@ -182,6 +188,7 @@ const  Login= ({navigation}) => {
 
     
     </View>
+    </TouchableWithoutFeedback>
   );
 };
 export default Login;
