@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 
 const CPage = () => {
-
+    const[data, setData] = useState("");
     const [vactStartDate, setvactStartDate] = useState("");
     const [vactEndDate, setvactEndDate] = useState("");
     const [vactPeriod, setvactPeriod] = useState("");
