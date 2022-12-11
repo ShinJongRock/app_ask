@@ -14,7 +14,7 @@ import {
     ScrollView,
     TextInput,
 } from 'react-native';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const C_1 = () => {
     
@@ -29,7 +29,10 @@ useEffect(() => {
 }, [])
 
 
-function search1() {
+ async function search1() {
+    const compCode = await AsyncStorage.getItem("compCode");
+    const empNum = await AsyncStorage.getItem("mb_code");
+
     let check = /^[0-9]+$/; 
     if(startDate != null || endDate != null){
         if (!check.test(startDate)) {
@@ -40,8 +43,8 @@ function search1() {
     }
     axios.post("http://192.168.2.91:5000/readMb_inOutInfoSearch",
         {
-            compCode: "admin01",
-            empCode: "008",
+            compCode: compCode,
+            empCode: empNum,
             startDate : startDate,
             endDate : endDate
         }
@@ -139,7 +142,7 @@ const styles = StyleSheet.create({
     },
     layout: {
         flex: 0.7, backgroundColor: "white",
-        justifyContent: "left",
+        // justifyContent: "left",
         alignItems: "center",
         flexDirection: "row",
         borderBottomWidth: 1,
@@ -148,12 +151,12 @@ const styles = StyleSheet.create({
     layout1: {
         flex: 5,
         backgroundColor: "white",
-        justifyContent: "left",
+        // justifyContent: "left",
     },
     layout2: {
         flexDirection : 'row',
         backgroundColor: "white",
-        justifyContent: "left",
+        // justifyContent: "left",
     },
     font: {
         fontSize: 20,

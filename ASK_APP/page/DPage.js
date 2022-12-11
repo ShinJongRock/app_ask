@@ -1,22 +1,38 @@
-import React from 'react';
-import { StyleSheet,
-             Text,
-             View,
-             SafeAreaView,
-             TextInput ,
-             Button,
-             Alert ,
-             Image
-            
-            } from 'react-native';
+import { Table, Row, Rows } from 'react-native-table-component';
+import axios from "axios";
+import React, { useEffect, useState } from 'react';
+import {
+    StyleSheet,
+    Text,
+    View,
+    Button,
+    Alert,
+    Image,
+    Style,
+    TouchableOpacity,
+    Modal,
+    Pressable,
+    ScrollView
+} from 'react-native';
+            import AsyncStorage from '@react-native-async-storage/async-storage';
+
             import ask from '../img/ask.png';
 const DPage = () => {
     return (
-        <View>
-                     <View style={styles.imgmain} >
-                <Image resizeMode="contain" style={styles.ask} source={ask} />
+        <View style={styles.container}>
+            <View style={styles.imgmain} >
+              <Image resizeMode="contain" style={styles.ask} source={ask} />
             </View>
-          <Text>급여 명세서</Text>
+
+            <View style={styles.title}>
+                <Text style={styles.titlename}>  휴가조회</Text>
+            </View>
+
+            
+
+
+
+
         </View>
     );
 };
@@ -62,6 +78,7 @@ const styles = StyleSheet.create({
       justifyContent:'center',
       alignItems:'center',
     },
+    
   
 
 

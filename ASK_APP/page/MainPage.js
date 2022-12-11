@@ -13,7 +13,7 @@ import { StyleSheet,
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-
+import * as Location from 'expo-location'; 
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import inOut from '../img/inOut.png';
 import inOut2 from '../img/inOut2.png';
@@ -25,9 +25,9 @@ import money from '../img/money.png';
 import search from '../img/search.png';
 import ask from '../img/ask.png';
 import APage from './APage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-
-
+import axios from "axios";
 const mainstack = createNativeStackNavigator();
 
 
@@ -36,22 +36,109 @@ const mainstack = createNativeStackNavigator();
 
 export default function MainPage({navigation, route}) {
 
-//   const MinScreen = () => {
-//     return (
+  const [location, setLocation] = useState(null);
+  const [errorMsg, setErrorMsg] = useState(null);
+
+    useEffect(() => {
+      // gps();
+   
+      }, []);
+
+//    위도 경도 값 받아옴  
+      const gps =() =>{
+        (async () => {
+          let { status } = await Location.requestForegroundPermissionsAsync();
+          if (status !== 'granted') {
+            setErrorMsg('Permission to access location was denied');
+           
+            return;
+          }
+          let loc = await Location.getCurrentPositionAsync({});
+          setLocation(loc);
+
        
-            
-//             <mainstack.Navigator>
-//                 <mainstack.Screen name="APage"   options={{title:'카메라'}}  component={APage}/>
-//                 <mainstack.Screen name='A_1'component={A_1} />
-               
-//             </mainstack.Navigator>
-        
-//     );
-// };
+        })();
+
+      } 
+
+      // const startgps = async () => {
+        // const compCode = await AsyncStorage.getItem("compCode");
+        // const empName  = await AsyncStorage.getItem("mb_name");
+        // const empCode   = await AsyncStorage.getItem("mb_code");
+        // // const empRank   = await AsyncStorage.getItem("mb_name");
+        // // const depCode   = await AsyncStorage.getItem("depCode ");
+        // const depName    = await AsyncStorage.getItem("mb_depName ");
+
+
+      //   console.log("가나다라마바사아자차카타파하")
+      //   axios.post("http://192.168.2.91:5000/start_inOutInfo",
+      //       {
+      //         compCode :compCode ,
+      //         empCode :empCode,
+      //         empName:empName,
+      //         empRank:"왕",
+      //         depCode :'002',
+      //         depName :depName,
+      //         y1:location.coords.latitude ,
+      //         x1:location.coords.longitude   
+      //       }
+      //     )
+      //     .then((res) => {
+      //         console.log('asd')
+
+      //     });
+      // }
 
 
 
-  const [ location , setLocation] = useState("");  // 위도 경도 저장 useState
+      const startgps = async () =>{
+        const compCode = await AsyncStorage.getItem("compCode");
+        const empName  = await AsyncStorage.getItem("mb_name");
+        const empCode   = await AsyncStorage.getItem("mb_code");
+        const empRank   = await AsyncStorage.getItem("mb_rank");
+        const depCode   = await AsyncStorage.getItem("mb_depCode");
+        const depName    = await AsyncStorage.getItem("mb_depName");
+      
+        // const  latitude = location.latitude;
+        // const  longitude = location.longitude;
+      
+        axios.post("http://192.168.2.91:5000/start_inOutInfo",{
+          compCode :compCode ,
+          empCode :empCode,
+          empName:empName,
+          empRank:empRank,
+          depCode :depCode,
+          depName :depName,
+          y1:'36.79911695845545' ,
+          x1:'127.08272705033013 ' 
+
+        }).then(function (response) {
+          Alert.alert(empName+"출근 하셨습니다")
+        }).catch(function (error) {
+            console("readCompany error :", error);
+        });
+
+    }
+
+
+
+    
+
+      //location 값에 gps 정보가 들어있음 
+      // console.log("location :", location)
+      //console.log("att : " , location.coords.altitude);
+      //console.log("long :" , location.coords.longitude);
+
+      // let text = '로딩중..';
+      // if (errorMsg) {
+      //   text = errorMsg;
+      // } else if (location) {
+      //   text = JSON.stringify(location);
+      //   console.log(text);
+      // }
+
+
+  
 
 
 
@@ -69,7 +156,28 @@ export default function MainPage({navigation, route}) {
           }
   
           //출근 버튼 눌렀을때 axios 보내는 함수
-          const input = () =>{
+          const input = async() =>{
+            await getLocation();
+            
+            axios.post("Link" , {
+              latitude : location.coords.latitude,    //위도
+              longitude :  location.coords.longitude,  //경도
+              compCode : '',
+
+            }).then( function ( response ){
+              if(response){
+                console.log("출근처리 완료");
+
+              }else{
+                console.log("출근처리 실패");
+
+              }
+
+            }).catch ( function (error){
+              console.log( "error 발생 : " , error);
+            });  
+          
+
 
           }
           
@@ -132,7 +240,9 @@ export default function MainPage({navigation, route}) {
               <View style={styles.toptext}><Text>출퇴근</Text></View>
               
             <View style={styles.two_1}>
-              <TouchableOpacity onPress={ input}>
+              <TouchableOpacity 
+                onPress={(screen) => {startgps()}}>
+
                <View>
                <Image resizeMode="contain" style={styles.Image} source={inOut}/>
                </View>
@@ -311,10 +421,6 @@ const styles = StyleSheet.create({
     text8:{
       left:13,
     },
-
-
- 
-
 
 
     toptext:{

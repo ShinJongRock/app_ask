@@ -14,19 +14,25 @@ import {
     Pressable,
     ScrollView
 } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const B_2 = () => {
     const [date, setDate] = useState("");
     const [empVact, setEmpVact] = useState("");
 
 
-    function getVact() {
-        console.log("getVact");
+     const getVact= async() =>{
+
+        const compCode = await AsyncStorage.getItem("compCode");
+        const empName  = await AsyncStorage.getItem("mb_name");
+        const empNum = await AsyncStorage.getItem("mb_code");
+
+        console.log("나 실행됨나 실행됨나 실행됨나 실행됨나 실행됨나 실행됨나 실행됨나 실행됨나 실행됨나 실행됨나 실행됨나 실행됨나 실행됨나 실행됨나 실행됨나 실행됨나 실행됨나 실행됨나 실행됨나 실행됨나 실행됨");
         axios.post("http://192.168.2.91:5000/read_empVact",
             {
-                compCode: "admin01",
-                empName: "최범근",
-                empNum: "008"
+                compCode: compCode,
+                empName: empName,
+                empNum: empNum
             }
         ).then(function (resp) {
             console.log(resp.data);
@@ -36,12 +42,15 @@ const B_2 = () => {
         })
     }
 
-    function getempVact() {
-        console.log("getVact");
+     const getempVact= async() => {
+        const compCode = await AsyncStorage.getItem("compCode");
+        const empNum = await AsyncStorage.getItem("mb_code");
+
+        console.log("gfdggfg",getVact);
         axios.post("http://192.168.2.91:5000/checkVactlist",
             {
-                compCode: "admin01",
-                empNum: "008"
+                compCode: compCode,
+                empNum: empNum
             }
         ).then(function (resp) {
             console.log("getempVact", resp.data);
@@ -51,6 +60,7 @@ const B_2 = () => {
             console.log(`Error Message: ${err}`);
         })
     }
+    
     useEffect(() => {
         getVact();
         getempVact();
@@ -62,19 +72,19 @@ const B_2 = () => {
 
     if(empVact != null){
         for(let i=0; i<empVact.length; i++){
-            data.push( [empVact[i].vactStartDate+"~\n"+empVact[i].vactEndDate,+ empVact[i].vactPeriod,empVact[i].vactName, empVact[i].vactState, empVact[i].vactNote])
+            data.push( [empVact[i].vactStartDate+"      \n~\n"+empVact[i].vactEndDate,+ empVact[i].vactPeriod,empVact[i].vactName, empVact[i].vactState, empVact[i].vactNote])
       }
     }
 
-    
-    
-   
+
   
     return (
         <View style={styles.container}>
+
             <View style={styles.title}>
                 <Text style={styles.titlename}>  휴가조회</Text>
             </View>
+
             <View style={styles.layout}>
                 <Text style={styles.font}>총 휴가:</Text>
                 {date && date.map((el) =>
@@ -85,7 +95,9 @@ const B_2 = () => {
                     <Text style={styles.font1}>{el.remindVacation}</Text>
                 )}
             </View>
+
             <View style={styles.layout1}>
+
                 <View>
                     <Text style={styles.font3}>신청 휴가 현황</Text>
                 </View>
@@ -96,13 +108,12 @@ const B_2 = () => {
                     
                
                 }}>
-                    <Row textStyle={styles.TableText1} style={styles.t1} data={header} />
-                    <Rows textStyle={styles.TableText} style={styles.t2} data={data} />
+                    <Row textStyle={styles.tableText1} style={styles.t1} data={header} />
+                    <Rows textStyle={styles.tableText} style={styles.t2} data={data} />
                 </Table>
                 </ScrollView>
             </View>
 
-      
         </View>
     );
 };
@@ -113,21 +124,28 @@ const styles = StyleSheet.create({
     container: {
         flex: 1, backgroundColor: "white",
     },
-    title: {
-        flex: 0.7, backgroundColor: "#005b9e",
-        justifyContent: "center",
-        alignItems: "left",
 
+
+
+
+
+
+    title: {
+        flex: 0.3,
+        backgroundColor: "#005b9e",
+        justifyContent: "center",
+        
+       
     },
     titlename: {
         color :"white",
         fontSize: 25,
         fontWeight: "500",
-        marginLeft: 20,
+        marginLeft: 5,
     },
     layout: {
         flex: 0.7, backgroundColor: "white",
-        justifyContent: "left",
+       
         alignItems: "center",
         flexDirection: "row",
         borderBottomWidth: 1,
@@ -136,7 +154,8 @@ const styles = StyleSheet.create({
     layout1: {
         flex: 5,
         backgroundColor: "white",
-        justifyContent: "left",
+        // justifyContent: "left",
+
      
     },
     font: {
@@ -161,22 +180,23 @@ const styles = StyleSheet.create({
         borderColor: "black",
         textAlign:'center'
     },
-    TableText1:{
+    tableText1:{
        height:30,
        fontSize:15,
        textAlign:'center',
         top:5,
         color:"white"
     },
-    TableText:{
+    tableText:{
        textAlign:'center',
        justifyContent:'center',
-        fontSize:15,
+        fontSize:13,
         margin:10
        
     },
     t1:{
         backgroundColor:'#777777',
+        height:45
      
     },
     t2:{

@@ -19,23 +19,26 @@ const C_2 = () => {
   const [errorMsg, setErrorMsg] = useState(null);
 
     useEffect(() => {
+      gps();
+      }, []);
+      
+
+      
+      const gps =() =>{
         (async () => {
-          
           let { status } = await Location.requestForegroundPermissionsAsync();
-       
-        
           if (status !== 'granted') {
             setErrorMsg('Permission to access location was denied');
            
             return;
           }
-        //   console.log(status.latitude);
           let loc = await Location.getCurrentPositionAsync({});
           setLocation(loc);
 
-        //   const {coords: {latitude,longitude} } =await Location.getCurrentPositionAsync();
+       
         })();
-      }, []);
+
+      } 
     
 
       //location 값에 gps 정보가 들어있음 
@@ -52,6 +55,7 @@ const C_2 = () => {
       }
     return (
         <View>
+          
                 <Text> 위도 : { location && location.coords.latitude }</Text>
                 <Text> 경도 : { location && location.coords.longitude }</Text>
          
